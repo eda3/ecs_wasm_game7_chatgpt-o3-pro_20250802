@@ -76,4 +76,12 @@ impl<T> Storage<T> {
     pub fn get_mut(&mut self, entity: Entity) -> Option<&mut T> {
         self.data.get_mut(entity as usize)?.as_mut()
     }
+
+    /// Iterate *mutable* over all `(Entity, &mut T)` pairs
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = (Entity, &mut T)> {
+        self.data
+            .iter_mut()
+            .enumerate()
+            .filter_map(|(id, slot)| slot.as_mut().map(|comp| (id as Entity, comp)))
+    }
 }
