@@ -48,6 +48,10 @@ pub fn start() -> Result<(), JsValue> {
 }
 */
 
+fn set_panic_hook() {
+    console_error_panic_hook::set_once();
+}
+
 /// Create a full-windows `<canvas>` element and append it to `<body`
 fn init_canvas(document: &Document) -> Result<HtmlCanvasElement, JsValue> {
     let canvas: HtmlCanvasElement = document
