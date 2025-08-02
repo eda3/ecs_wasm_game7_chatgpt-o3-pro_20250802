@@ -11,7 +11,7 @@ use web_sys::{
 };
 
 // Optional: shrink WASM binary size
-#[cfg(feture = "slim")]
+#[cfg(feature = "slim")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
@@ -20,7 +20,6 @@ const WS_HOST: &str = "ws://162.43.8.148:8101";
 
 // Public API (called automatically by wasm-bindgen on module load)
 
-/*
 /// Entry point excuted once the `.wasm` is instantiated.
 ///
 /// `wasm-bindgen` expands this into JS glue that calls our Rust
@@ -44,9 +43,8 @@ pub fn start() -> Result<(), JsValue> {
     // 5. Initial drawing = just a placeholder background for now
     draw_background(&context)?;
 
-    ok(())
+    Ok(())
 }
-*/
 
 fn set_panic_hook() {
     console_error_panic_hook::set_once();
