@@ -70,5 +70,12 @@ fn init_websocket() -> Result<WebSocket, JsValue> {
     ws.set_onmessage(Some(onmessage_cb.as_ref().unchecked_ref()));
     onmessage_cb.forget();
 
+    // Handle errors
+    let onerror_cb = Closure::<dyn FnMut()>::new(|| {
+        web_sys::console::error_1(&"WebSocket error".into());
+    });
+    ws.set_onerror(Some(onerror_cb.as_ref().unchecked_ref()));
+    onerror_cb.forget();
+
     Ok(ws)
 }
