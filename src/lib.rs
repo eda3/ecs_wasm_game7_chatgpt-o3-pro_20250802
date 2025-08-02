@@ -4,6 +4,8 @@ use wasm_bindgen::prelude::*;
 
 use wasm_bindgen::{JsCast, UnwrapThrowExt};
 
+use wasm_bindgen::JsValue;
+
 use web_sys::{
     CanvasRenderingContext2d, Document, HtmlCanvasElement, MessageEvent, WebSocket, Window,
 };
@@ -45,6 +47,19 @@ pub fn start() -> Result<(), JsValue> {
     ok(())
 }
 */
+
+/// Draw an initial blank background(placeholder)
+fn draw_background(ctx: &CanvasRenderingContext2d) -> Result<(), JsValue> {
+    let width = ctx.canvas().unwrap_throw().width() as f64;
+    let height = ctx.canvas().unwrap_throw().height() as f64;
+
+    // ctx.set_fill_style(&"#0B6623".into()); // dark greeen felt;
+    #[allow(deprecated)]
+    ctx.set_fill_style(&"#0B6623".into()); // dark greeen felt;
+    ctx.fill_rect(0.0, 0.0, width, height);
+
+    Ok(())
+}
 
 /// Establish a WebSocket connection to the game server.
 ///
