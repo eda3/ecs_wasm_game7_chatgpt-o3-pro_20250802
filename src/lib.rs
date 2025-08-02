@@ -48,6 +48,17 @@ pub fn start() -> Result<(), JsValue> {
 }
 */
 
+/// Obtain the 2D rendering context from our canvas
+fn canvas_context(canvas: &HtmlCanvasElement) -> Result<CanvasRenderingContext2d, JsValue> {
+    let ctx = canvas
+        .get_context("2d")?
+        .ok_or_else(|| JsValue::from_str("no 2d context"))?
+        .dyn_into::<CanvasRenderingContext2d>()
+        .map_err(|e| JsValue::from(e))?;
+
+    Ok(ctx)
+}
+
 /// Draw an initial blank background(placeholder)
 fn draw_background(ctx: &CanvasRenderingContext2d) -> Result<(), JsValue> {
     let width = ctx.canvas().unwrap_throw().width() as f64;
