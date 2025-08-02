@@ -5,7 +5,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::{JsCast, UnwrapThrowExt};
 
 use web_sys::{
-    CanvasRenderingContext2d, Document, HtmlCanvasElement, MessageEvent, WebSocket,Window
+    CanvasRenderingContext2d, Document, HtmlCanvasElement, MessageEvent, WebSocket, Window,
 };
 
 // Optional: shrink WASM binary size
@@ -58,7 +58,17 @@ fn init_websocket() -> Result<WebSocket, JsValue> {
         web_sys::console::log_1(&"WebSocket connected".into());
     });
     ws.set_onopen(Some(onopen_cb.as_ref().unchecked_ref()));
+    onopen_cb.forget(); // leak the closure -> stays alive for lifetime of WS
+
+    // Handle incoming messages
+    let onmessage_cb = Closure::<dyn FnMut(MessageEvent)>::new(|evt: MessageEvent| {
+        if let Ok(txt) = evt.data().dyn_into::<js_sys::JsString>() {
+            web_sys::console::log_2(&"WS message:".into(), &txt);
+        }
+        // Binary frames will be handled later (bincode-encoded state)
+    });
+    ws.set_onmessage(Some(onmessage_cb.as_ref().unchecked_ref()));
+    onmessage_cb.forget();
 
     Ok(ws)
 }
-
