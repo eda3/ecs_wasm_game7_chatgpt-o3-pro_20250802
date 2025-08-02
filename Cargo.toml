@@ -1,6 +1,59 @@
-[package]
-name = "ecs_wasm_game7_chatgpt-o3-pro_20250802"
-version = "0.1.0"
-edition = "2024"
+# ---------------------------------------------------------------------------
+# Cargo.toml  —  WASM‑only Multiplayer Klondike Solitaire (single crate)
+# ---------------------------------------------------------------------------
 
+[package]
+name        = "klondike_mp_wasm"
+version     = "0.1.0"
+edition     = "2024"
+authors     = ["えだ <you@example.com>"]
+license     = "MIT OR Apache-2.0"
+description = "Multiplayer Klondike Solitaire ― Rust ➜ WebAssembly build (Trunk)"
+
+#---------------------------------------------------------------------------
+# We only target WebAssembly, so the crate type is `cdylib` (Wasm binary).
+[lib]
+crate-type = ["cdylib"]
+
+#---------------------------------------------------------------------------
+# Shared / cross‑platform dependencies  (all compile to WASM)
 [dependencies]
+serde                       = { version = "1.0", features = ["derive"] }
+serde_json                  = "1.0"
+bincode                     = "2.0.0-rc.3"
+thiserror                   = "1.0"
+
+# --- WebAssembly‑specific crates ------------------------------------------
+wasm-bindgen                = { version = "0.2.92", features = ["serde-serialize"] }
+web-sys                     = { version = "0.3.69", features = [
+    # Core browser objects
+    "Window", "Document", "Element",
+    # Canvas 2D drawing
+    "HtmlCanvasElement", "CanvasRenderingContext2d",
+    # WebSocket for multiplayer sync
+    "WebSocket", "MessageEvent", "CloseEvent", "ErrorEvent",
+    # User input
+    "KeyboardEvent", "MouseEvent",
+    # Console logging
+    "console"
+] }
+js-sys                      = "0.3.69"
+console_error_panic_hook    = "0.1"
+
+# Optional: tiny allocator to shrink Wasm size (enable via `wee_alloc` feature)
+wee_alloc                   = { version = "0.4", optional = true }
+
+#---------------------------------------------------------------------------
+# Compile‑time features
+[features]
+# Enable to replace the default allocator with `wee_alloc` for smaller .wasm
+slim = ["wee_alloc"]
+
+#---------------------------------------------------------------------------
+# Release build tuned for small Wasm payload
+[profile.release]
+opt-level      = "z"
+lto            = true
+codegen-units  = 1
+strip          = "symbols"
+# ---------------------------------------------------------------------------
