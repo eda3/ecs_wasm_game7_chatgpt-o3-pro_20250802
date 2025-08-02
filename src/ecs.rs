@@ -71,4 +71,9 @@ impl<T> Storage<T> {
     pub fn get(&self, entity: Entity) -> Option<&T> {
         self.data.get(entity as usize)?.as_ref()
     }
+
+    /// Mutable access
+    pub fn get_mut(&mut self, entity: Entity) -> Option<&mut T> {
+        self.data.get_mut(entity as usize)?.as_mut()
+    }
 }
