@@ -37,3 +37,19 @@ impl EntityAllocator {
         self.recycled.push(entity);
     }
 }
+
+// Component storage ( sparse vector)
+
+/// Generic sparse storage for a single component type
+///
+/// Internally it is just `Vec<Option<T>>` indexed by `Entity`
+///
+/// *Pros*:
+/// - Very small code
+/// - Cache-friendly iteration
+/// *Cons*:
+/// - One vector per component type
+/// - Dense IDs preferred
+pub struct Strage<T> {
+    data: Vec<Option<T>>,
+}
