@@ -50,6 +50,25 @@ impl EntityAllocator {
 /// *Cons*:
 /// - One vector per component type
 /// - Dense IDs preferred
-pub struct Strage<T> {
+pub struct Storage<T> {
     data: Vec<Option<T>>,
+}
+
+impl<T> Storage<T> {
+    pub fn new() -> Self {
+        Self { data: Vec::new() }
+    }
+
+    /// Insert or replace a component for the given entity
+    pub fn insert(&mut self, entity: Entity, component: T) {
+        if entity as usize >= self.data.len() {
+            self.data.resize_with(entity as usize + 1, || None);
+        }
+        self.data[entity as usize] = Some(component);
+    }
+
+    /// Immutable access
+    pub fn get(&self, entity: Entity) -> Option<&T> {
+        self.data.get(entity as usize)?.as_ref()
+    }
 }
