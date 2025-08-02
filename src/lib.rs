@@ -48,7 +48,7 @@ pub fn start() -> Result<(), JsValue> {
     let _ws = init_websocket()?;
 
     // 5. Initial drawing = just a placeholder background for now
-    draw_background(&context);
+    let _ = draw_background(&context);
     let _ws = init_websocket()?;
 
     Ok(())
@@ -100,8 +100,10 @@ fn canvas_context(canvas: &HtmlCanvasElement) -> Result<CanvasRenderingContext2d
 
 /// Draw an initial blank background(placeholder)
 fn draw_background(ctx: &CanvasRenderingContext2d) -> Result<(), JsValue> {
-    let width = ctx.canvas().unwrap_throw().width() as f64;
-    let height = ctx.canvas().unwrap_throw().height() as f64;
+    // let width = ctx.canvas().unwrap_throw().width() as f64;
+    // let height = ctx.canvas().unwrap_throw().height() as f64;
+    let width = f64::from(ctx.canvas().unwrap_throw().width());
+    let height = f64::from(ctx.canvas().unwrap_throw().height());
 
     // ctx.set_fill_style(&"#0B6623".into()); // dark greeen felt;
     #[allow(deprecated)]
