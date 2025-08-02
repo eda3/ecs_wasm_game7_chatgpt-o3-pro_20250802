@@ -20,10 +20,17 @@ const WS_HOST: &str = "ws://162.43.8.148:8101";
 
 // Public API (called automatically by wasm-bindgen on module load)
 
-/// Entry point excuted once the `.wasm` is instantiated.
+/// Entry point executed once the `.wasm` is instantiated.
 ///
 /// `wasm-bindgen` expands this into JS glue that calls our Rust
 /// code after the browser finishes loading the module.
+///
+/// # Errors
+///
+/// # Panics
+///
+/// This function will panic only when executed **outside** a browser
+/// context—i.e. when `window` or `document` objects are unavailable.
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
     // 1. Better panic messages in browser dev-tools console
@@ -41,7 +48,8 @@ pub fn start() -> Result<(), JsValue> {
     let _ws = init_websocket()?;
 
     // 5. Initial drawing = just a placeholder background for now
-    draw_background(&context)?;
+    draw_background(&context);
+    let _ws = init_websocket()?;
 
     Ok(())
 }
@@ -51,6 +59,8 @@ fn set_panic_hook() {
 }
 
 /// Create a full-windows `<canvas>` element and append it to `<body`
+/// # Errors
+///
 fn init_canvas(document: &Document) -> Result<HtmlCanvasElement, JsValue> {
     let canvas: HtmlCanvasElement = document
         .create_element("canvas")?
@@ -76,6 +86,8 @@ fn init_canvas(document: &Document) -> Result<HtmlCanvasElement, JsValue> {
 }
 
 /// Obtain the 2D rendering context from our canvas
+/// # Errors
+///
 fn canvas_context(canvas: &HtmlCanvasElement) -> Result<CanvasRenderingContext2d, JsValue> {
     let ctx = canvas
         .get_context("2d")?
@@ -103,6 +115,8 @@ fn draw_background(ctx: &CanvasRenderingContext2d) -> Result<(), JsValue> {
 ///
 /// For now we only print connection events; real game-state sync
 /// will be added in later steps.
+/// # Errors
+///
 fn init_websocket() -> Result<WebSocket, JsValue> {
     let ws = WebSocket::new(WS_HOST)?;
 
