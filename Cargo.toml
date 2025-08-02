@@ -26,15 +26,11 @@ thiserror                   = "1.0"
 # --- WebAssembly‑specific crates ------------------------------------------
 wasm-bindgen                = { version = "0.2.92", features = ["serde-serialize"] }
 web-sys                     = { version = "0.3.69", features = [
-    # Core browser objects
     "Window", "Document", "Element",
-    # Canvas 2D drawing
     "HtmlCanvasElement", "CanvasRenderingContext2d",
-    # WebSocket for multiplayer sync
+    "CssStyleDeclaration",
     "WebSocket", "MessageEvent", "CloseEvent", "ErrorEvent",
-    # User input
     "KeyboardEvent", "MouseEvent",
-    # Console logging
     "console"
 ] }
 js-sys                      = "0.3.69"

@@ -48,6 +48,31 @@ pub fn start() -> Result<(), JsValue> {
 }
 */
 
+/// Create a full-windows `<canvas>` element and append it to `<body`
+fn init_canvas(document: &Document) -> Result<HtmlCanvasElement, JsValue> {
+    let canvas: HtmlCanvasElement = document
+        .create_element("canvas")?
+        .dyn_into::<HtmlCanvasElement>()?;
+
+    // Full-screen canvas sizing
+    let width = document.document_element().unwrap_throw().client_width();
+    let height = document.document_element().unwrap_throw().client_height();
+
+    canvas.set_width(width as u32);
+    canvas.set_height(height as u32);
+
+    // Light-gray background to verify we rendered something
+    canvas.style().set_property("background", "#e8e8e8")?;
+
+    // Append to <body>
+    document
+        .body()
+        .expect("document should have a body")
+        .append_child(&canvas)?;
+
+    Ok(canvas)
+}
+
 /// Obtain the 2D rendering context from our canvas
 fn canvas_context(canvas: &HtmlCanvasElement) -> Result<CanvasRenderingContext2d, JsValue> {
     let ctx = canvas
