@@ -1,0 +1,6 @@
+[package]
+name = "ecs_wasm_game7_chatgpt-o3-pro_20250802"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
